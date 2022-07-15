@@ -1,6 +1,7 @@
 """
 Beautiful is better than Ugly.
 """
+import csv
 import io
 import os
 import sys
@@ -424,3 +425,36 @@ results = [x ** 2 for x in range(10)]
 print(sum(results))
 
 print(sum(x ** 2 for x in range(10)))
+
+"""
+CSV: Write & Read
+    Open a file,
+        pass the file object to a csv.writer/csv.DictWriter or csv.reader/csv.DictReader
+"""
+with open('test.csv', 'w') as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(['row1-col1', 'row1-col2'])
+    writer.writerow(['row2-col1', 'row2-col2'])
+
+with open('test.csv', 'r') as csvfile:
+    reader = csv.reader(csvfile)
+    for r in reader:
+        print(r)
+
+with open('test.csv', 'w') as csvfile:
+    headers = ['col1', 'col2']
+    writer = csv.DictWriter(csvfile, fieldnames=headers)
+    writer.writeheader()
+    writer.writerow({
+        'col1': 'ryan',
+        'col2': 'chacon'
+    })
+    writer.writerow({
+        'col1': 'erik',
+        'col2': 'chacon'
+    })
+
+with open('test.csv', 'r') as csvfile:
+    reader = csv.DictReader(csvfile)
+    for r in reader:
+        print(r['col1'], r['col2'])
