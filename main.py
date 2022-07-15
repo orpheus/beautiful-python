@@ -127,12 +127,13 @@ f = io.StringIO('Ryan')
 for i in iter(f.read(4)):
     print('Loop over Iterable: ', i)
 
+"""
+Multiple Exit Points in Loops:
+    the for-else construct
+"""
+
 
 def no_break(seq):
-    """
-    Multiple Exit Points in Loops:
-        the for-else construct
-    """
     for index, value in enumerate(io.StringIO('Ryan').read(4)):
         if value == seq:
             break
@@ -160,7 +161,7 @@ for k in d:
 
 """
 You cannot mutate an object while iterating over it, if you do, 
-"you're living in a tatue of sin".
+"you're living in a state of sin".
 
 d.keys() in python2 would make a copy of the keys into a list that you
 could iterate over and mutate the original object.
