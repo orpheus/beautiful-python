@@ -2,7 +2,7 @@
 Beautiful is better than Ugly.
 """
 import io
-from collections import defaultdict
+from collections import defaultdict, ChainMap, namedtuple, deque
 from functools import partial
 
 """
@@ -203,7 +203,7 @@ for c in colors:
 print(dict(d))  # defaultdict has to be converted back
 
 """
-Grouping with dictionaries
+Grouping with dictionaries:
 """
 # Beginner Way
 names = ['ryan', 'erik', 'luna', 'drew', 'jordan', 'bri', 'molly', 'sarah']
@@ -230,3 +230,104 @@ for n in names:
     key = len(n)
     d[key].append(n)
 print(dict(d))
+
+"""
+Atomic popitem():
+    popitem() is atomic and can be safely used between threads to 
+    pull tasks
+    
+    Doesn't seem to guarantee which one it pops?
+"""
+d = {'one': 1, 'two': 2, 'three': 3}
+while d:
+    key, value = d.popitem()
+    print(key, '->', value)
+
+"""
+Linking Dictionaries:
+    Old way that copies a bunch of data:
+        d = defaults.copy()
+        d.update(env_vars)
+        d.update(cmd_line_args)
+"""
+defaults = {"name": "ryan", "age": 23, "city": "Utah"}
+env_vars = {"age": 26}
+cmd_line_args = {"name": "roark", "city": "San Diego"}
+d = ChainMap(cmd_line_args, env_vars, defaults)
+print(dict(d))
+
+"""
+Improving Clarity
+
+1. Use named keywords. Reduces obscurity, leads to less bugs.
+"""
+namedtuple(typename='TypeName', field_names=['wins', 'losses'])
+
+"""
+2. Use NamedTuples for return values. Increases Readability.
+"""
+score_board = (0, 3)
+print(score_board)
+ScoreBoard = namedtuple('NamedTuple', ['wins', 'losses'])
+score_board = ScoreBoard(3, 0)
+print(score_board)
+
+"""
+3. Unpacking sequences
+"""
+p = 'Ryan', 'Andrew', 'Chacon'
+first, middle, last = p  # vs p[0], p[1], etc
+print(first, middle, last)
+
+"""
+4. Updating Multiple State Values
+"""
+
+
+def fib_bad(n):
+    x = 0
+    y = 1
+    for _ in range(n):
+        print(x)
+        t = y
+        y = x + y
+        x = t
+
+
+def fib_good(n):
+    x, y = 0, 1
+    for _ in range(n):
+        print(x)
+        x, y = y, x + y
+
+
+fib_bad(5)
+fib_good(5)
+
+"""
+Joining strings:
+"""
+names = ['ryan', 'erik', 'luna', 'drew']
+print(', '.join(names))
+
+"""
+Updating Sequences:
+"""
+# Slow
+names = ['ryan', 'erik', 'luna', 'drew']
+del names[0]
+print(names)
+names.pop(0)
+print(names)
+names.insert(0, 'copper')
+print(names)
+
+# Fast
+
+names = deque(['ryan', 'erik', 'luna', 'drew'])
+del names[0]
+print(names)
+names.popleft()
+print(names)
+names.appendleft('copper')
+print(names)
