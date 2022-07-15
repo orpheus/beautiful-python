@@ -2,7 +2,11 @@
 Beautiful is better than Ugly.
 """
 import io
+import os
+import sys
+import threading
 from collections import defaultdict, ChainMap, namedtuple, deque
+from contextlib import contextmanager
 from functools import partial
 
 """
@@ -317,8 +321,10 @@ Updating Sequences:
 names = ['ryan', 'erik', 'luna', 'drew']
 del names[0]
 print(names)
+
 names.pop(0)
 print(names)
+
 names.insert(0, 'copper')
 print(names)
 
@@ -327,7 +333,93 @@ print(names)
 names = deque(['ryan', 'erik', 'luna', 'drew'])
 del names[0]
 print(names)
+
 names.popleft()
 print(names)
+
 names.appendleft('copper')
 print(names)
+
+"""
+Decorators and Context Managers:
+    1. Helps separate business logic from administrative logic
+    2. Clean, beautiful tools for factoring code and improving code reuse
+    3. Good naming essentials
+"""
+
+"""
+Making a lock:
+    Old Way:
+        lock = threading.Lock()
+        lock.acquire()
+        try:
+            print("Lock 1")
+        finally:
+            lock.release()
+"""
+
+lock = threading.Lock()
+with lock:
+    print('Lock Ctx Manager')
+
+"""
+Ignoring try/except exceptions:
+    Old Way:
+        try:
+            os.remove('tmpfile')
+        except OSError:
+            pass
+"""
+
+
+@contextmanager
+def ignored(*exceptions):
+    try:
+        yield
+    except exceptions:
+        pass
+
+
+with ignored(OSError):
+    os.remove('tmpfile')
+
+"""
+Redirecting StdOut
+    Old Way:
+        with open('help.txt', 'w') as f:
+            oldstdout = sys.stdout
+            sys.stdout = f
+            try:
+                help(pow)
+            finally:
+                sys.stdout = oldstdout
+
+"""
+
+
+@contextmanager
+def redirect_stdout(file_obj):
+    oldstdout = sys.stdout
+    sys.stdout = file_obj
+    try:
+        yield file_obj
+    finally:
+        sys.stdout = oldstdout
+
+
+with open('help.txt', 'w') as f:
+    with redirect_stdout(f):
+        help(pow)
+
+"""
+List Comprehension and Generator Expressions:
+    Old Way:
+        results = []
+        for i in range(10):
+            results.append(i**2)
+        print(sum(results))
+"""
+results = [x ** 2 for x in range(10)]
+print(sum(results))
+
+print(sum(x ** 2 for x in range(10)))
